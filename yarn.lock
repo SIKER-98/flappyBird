@@ -1180,6 +1180,11 @@
   resolved "https://registry.yarnpkg.com/@react-native-community/eslint-plugin/-/eslint-plugin-1.1.0.tgz#e42b1bef12d2415411519fd528e64b593b1363dc"
   integrity sha512-W/J0fNYVO01tioHjvYWQ9m6RgndVtbElzYozBq1ZPrHO/iCzlqoySHl4gO/fpCl9QEFjvJfjPgtPMTMlsoq5DQ==
 
+"@react-native-community/geolocation@^2.0.2":
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/@react-native-community/geolocation/-/geolocation-2.0.2.tgz#ba8b40f560ead8d014740d1cdea970b33f19312e"
+  integrity sha512-tTNXRCgnhJBu79mulQwzabXRpDqfh/uaDqfHVpvF0nX4NTpolpy6mvTRiFg7eWFPGRArsnZz1EYp6rHfJWGgEA==
+
 "@react-native/assets@1.0.0":
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/@react-native/assets/-/assets-1.0.0.tgz#c6f9bf63d274bafc8e970628de24986b30a55c8e"
@@ -1263,6 +1268,11 @@
   integrity sha512-K2waXdXBi2302XUdcHcR1jCeU0LL4TD9HRs/gk0N2Xvrht+G/BfJa4QObBQZfhMdxiCpV3COl5Nfq4uKTeTnJA==
   dependencies:
     "@babel/types" "^7.3.0"
+
+"@types/geojson@^7946.0.7":
+  version "7946.0.8"
+  resolved "https://registry.yarnpkg.com/@types/geojson/-/geojson-7946.0.8.tgz#30744afdb385e2945e22f3b033f897f76b1f12ca"
+  integrity sha512-1rkryxURpr6aWP7R786/UQOkJ3PcpQiWkAXBmdWc7ryFWqN6a4xfK7BtjXvFBKO9LjQ+MWQSWxYeZX1OApnArA==
 
 "@types/graceful-fs@^4.1.2":
   version "4.1.5"
@@ -5441,6 +5451,23 @@ react-native-game-engine@^1.2.0:
   integrity sha512-SZwvxh0qN5HxuREL733B2VrtsadoSiN0RxulGaJu8OC3LTeliQM7whGQREtoBLo2tQ9iIzyzhiMSTzLCvmEJWg==
   dependencies:
     rxjs "^6.2.2"
+
+react-native-geocoder@^0.5.0:
+  version "0.5.0"
+  resolved "https://registry.yarnpkg.com/react-native-geocoder/-/react-native-geocoder-0.5.0.tgz#ff4b9c55d5768a4784eefccb411761c82e067579"
+  integrity sha1-/0ucVdV2ikeE7vzLQRdhyC4GdXk=
+
+react-native-geocoding@^0.5.0:
+  version "0.5.0"
+  resolved "https://registry.yarnpkg.com/react-native-geocoding/-/react-native-geocoding-0.5.0.tgz#69748f896047a63d1c3c1d55255f9d67c8e275c2"
+  integrity sha512-peTXRpRxPLiZpbTW43AOvoXXAEoS+eLnSo4KRY0hcL9F2hulWE5r7o5KiaLx8AWj35c6EJP3fdGHe754q2Gd2Q==
+
+react-native-maps@^0.29.3:
+  version "0.29.3"
+  resolved "https://registry.yarnpkg.com/react-native-maps/-/react-native-maps-0.29.3.tgz#ab873fa5e7301c29f07886df5f3cbef667d46cca"
+  integrity sha512-742ipC71NdGHXmrCHPY9SEGDuKoSx2l0RMC1W9WXe/jd6+Eg5OllRBcR6Y+ORnzvuYZrd0Hj6q6bK3QR5ZL8sA==
+  dependencies:
+    "@types/geojson" "^7946.0.7"
 
 react-native@0.66.0:
   version "0.66.0"

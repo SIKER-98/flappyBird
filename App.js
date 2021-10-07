@@ -7,6 +7,7 @@ import Floor from "./Floor";
 import Physics, { resetPipes } from "./Physics";
 import Constants from "./Constants";
 import Images from "./assets/Images";
+import findCoordinates from "./Geolocation";
 
 export default class App extends Component {
   constructor(props) {
@@ -15,6 +16,7 @@ export default class App extends Component {
     this.state = {
       running: true,
       score: 0,
+      location: "",
     };
 
     this.gameEngine = null;
@@ -22,7 +24,15 @@ export default class App extends Component {
     this.entities = this.setupWorld();
   }
 
+
+
   setupWorld = () => {
+    const updater = ({ location }) => {
+      this.setState({location})
+    };
+
+    findCoordinates(updater);
+
     let engine = Matter.Engine.create({ enableSleeping: false });
     let world = engine.world;
     world.gravity.y = 0.0;
@@ -99,7 +109,9 @@ export default class App extends Component {
           entities={this.entities}>
           <StatusBar hidden={true} />
         </GameEngine>
+        <Text style={styles.location}>{this.state.location}</Text>
         <Text style={styles.score}>{this.state.score}</Text>
+
         {!this.state.running && <TouchableOpacity style={styles.fullScreenButton} onPress={this.reset}>
           <View style={styles.fullScreen}>
             <Text style={styles.gameOverText}>Game Over</Text>
@@ -115,6 +127,17 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#fff",
+  },
+  location: {
+    position: "absolute",
+    color: "white",
+    fontSize: 30,
+    bottom: 25,
+    left: 10,
+    textShadowColor: "#444444",
+    textShadowOffset: { width: 2, height: 2 },
+    textShadowRadius: 2,
+    fontFamily: "04b_19",
   },
   backgroundImage: {
     position: "absolute",
