@@ -119,15 +119,19 @@ const Physics = (entities, { touches, time, dispatch }) => {
   Matter.Engine.update(engine, time.delta);
 
   Object.keys(entities).forEach(key => {
+    // przesuwanie rur
     if (key.indexOf("pipe") === 0 && entities.hasOwnProperty(key)) {
       Matter.Body.translate(entities[key].body, { x: -10, y: 0 });
 
+
       if (key.indexOf("Top") !== -1 && parseInt(key.replace("pipe", "")) % 2 === 0) {
+        // zdobywanie punktow
         if (entities[key].body.position.x <= bird.position.x && !entities[key].scored) {
           entities[key].scored = true;
           dispatch({ type: "score" });
         }
 
+        // usuwanie rur
         if (entities[key].body.position.x <= -1 * (Constants.PIPE_WIDTH / 2)) {
           let pipeIndex = parseInt(key.replace("pipe", ""));
           delete (entities["pipe" + (pipeIndex - 1) + "Top"]);
@@ -135,6 +139,7 @@ const Physics = (entities, { touches, time, dispatch }) => {
           delete (entities["pipe" + pipeIndex + "Top"]);
           delete (entities["pipe" + pipeIndex]);
 
+          // dodawanie nowych rur
           addPipesAtLocation((Constants.MAX_WIDTH * 2) - (Constants.PIPE_WIDTH / 2), world, entities);
         }
       }

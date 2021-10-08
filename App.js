@@ -9,6 +9,7 @@ import Constants from "./Constants";
 import Images from "./assets/Images";
 import findCoordinates from "./Geolocation";
 import Realm from "realm";
+import axios from "axios";
 
 let realm;
 
@@ -17,7 +18,7 @@ const scoreRow = {
   properties: {
     score: "int",
     address: "string",
-    date: "string"
+    date: "string",
   },
 };
 
@@ -31,13 +32,13 @@ export default class App extends Component {
       score: 0,
       location: "",
       scores: [],
-      played:0,
+      played: 0,
     };
 
     this.gameEngine = null;
 
     realm = new Realm({
-      path: "UserDatabase5.realm",
+      path: "scoreDb.realm",
       schema: [{
         name: "highScore",
         properties: {
@@ -56,27 +57,44 @@ export default class App extends Component {
     findCoordinates(updater);
   }
 
-  getFromDb = () => {
-    let highScores = realm.objects("highScore");
-    console.log("top:", highScores);
+  // pobieranie z bazy danych
+  getFromDb = async () => {
+    // let highScores = realm.objects("highScore");
+    // console.log("top:", highScores);
+    //
+    // this.setState({played:highScores.length})
+    //
+    // highScores = [...highScores].sort((a, b) => b.point - a.point).slice(0, 8);
+    //
+    // console.log("top 10:", highScores);
+    // this.setState({ scores: highScores });
+    await axios.get("http://localhost:4545/api/")
+      .then(res => {
+        console.log(res);
+        this.setState({ played: res.data.length });
 
-    this.setState({played:highScores.length})
+        const highScores = [...res.data].sort((a, b) => b.point - a.point).slice(0, 8);
+        this.setState({ scores: highScores });
+      });
 
-    highScores = [...highScores].sort((a, b) => b.point - a.point).slice(0, 8);
-
-    // highScores.sort((a, b) => a.point - b.point);
-    console.log("top 10:", highScores);
-    this.setState({ scores: highScores });
   };
 
-  insertToDb = (record) => {
-    console.log(record);
-    realm.write(() => {
-      realm.create("highScore", {
-        point: record.point * 1,
-        address: record.address,
-        date: record.date,
-      });
+  // zapis wyniku do bazy danych
+  insertToDb = async (record) => {
+    // console.log(record);
+    // realm.write(() => {
+    //   realm.create("highScore", {
+    //     point: record.point * 1,
+    //     address: record.address,
+    //     date: record.date,
+    //   });
+    // });
+    await axios.post("http://localhost:4545/api/", {
+      time: record.date,
+      location: record.location,
+      point: record.point,
+    }).then(r => {
+      console.log(r);
     });
   };
 
@@ -133,8 +151,8 @@ export default class App extends Component {
 
       this.insertToDb({
         point: this.state.score,
-        address: this.state.location,
-        date: new Date().toJSON(),
+        location: this.state.location,
+        time: new Date().toJSON(),
       });
 
       this.getFromDb();
@@ -185,16 +203,16 @@ export default class App extends Component {
             <Text style={styles.gameOverText}>High Scores:</Text>
             {this.state.scores.map((score, i) => (
               <>
-              <Text style={{
-                color: "white",
-                marginTop:12
-              }}
-              >{i + 1}) {score.point}pkt. - {score.address}</Text>
-              <Text style={{
-                color: "white",
-              }}
+                <Text key={i} style={{
+                  color: "white",
+                  marginTop: 12,
+                }}
+                >{i + 1}) {score.point}pkt. - {score.location}</Text>
+                <Text key={"0" + i} style={{
+                  color: "white",
+                }}
 
-              >{score.date.replace('T', ' ').replace('Z', '').slice(0,19)}</Text>
+                >{score.time.replace("T", " ").replace("Z", "").slice(0, 19)}</Text>
               </>
             ))}
           </View>

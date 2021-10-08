@@ -1,16 +1,20 @@
 import Geolocation from "@react-native-community/geolocation";
 import Geocoder from "react-native-geocoding";
-import { Alert } from "react-native";
 
 const findCoordinates = (callback) => {
+  // pobranie informacji o lokalizacji
   Geolocation.getCurrentPosition(position => {
       const location = JSON.stringify(position);
       console.log("My location: ", location);
 
+      // wyszczególnienie danych o położeniu
       const latitude = position.coords.latitude;
       const longitude = position.coords.longitude;
 
-      Geocoder.init("AIzaSyBB9ERk2ZjkaVqJkGG8TNmHYw97vJqkmOc");
+
+      Geocoder.init("AIzaSyBB9ERk2ZjkaVqJkGG8TNmHYw97vJqkmOc"); // klucz API Google
+
+      // wyslanie do googla swojego polozenia i otrzymanie adresu
       return Geocoder.from({ latitude, longitude }, { language: "pl" })
         .then(json => {
           let location = json.results[0].formatted_address;
@@ -18,7 +22,7 @@ const findCoordinates = (callback) => {
           callback({ location });
         })
         .catch(error => {
-          console.warn("Geolocation 22", error);
+          console.warn("GPS error", error);
           callback("GPS error");
         });
 
