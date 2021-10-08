@@ -17,13 +17,15 @@
     "react-native-game-engine": "^1.2.0",
     "react-native-geocoder": "^0.5.0",
     "react-native-geocoding": "^0.5.0",
-    "react-native-maps": "^0.29.3"
+    "react-native-maps": "^0.29.3",
+    "realm": "^10.8.0"
   },
   "devDependencies": {
     "@babel/core": "^7.15.5",
     "@babel/runtime": "^7.15.4",
     "@react-native-community/eslint-config": "^3.0.1",
     "babel-jest": "^27.2.4",
+    "bson": "^4.5.3",
     "eslint": "^7.32.0",
     "jest": "^27.2.4",
     "metro-react-native-babel-preset": "^0.66.2",

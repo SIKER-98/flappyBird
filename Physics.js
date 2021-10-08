@@ -120,7 +120,7 @@ const Physics = (entities, { touches, time, dispatch }) => {
 
   Object.keys(entities).forEach(key => {
     if (key.indexOf("pipe") === 0 && entities.hasOwnProperty(key)) {
-      Matter.Body.translate(entities[key].body, { x: -6, y: 0 });
+      Matter.Body.translate(entities[key].body, { x: -10, y: 0 });
 
       if (key.indexOf("Top") !== -1 && parseInt(key.replace("pipe", "")) % 2 === 0) {
         if (entities[key].body.position.x <= bird.position.x && !entities[key].scored) {

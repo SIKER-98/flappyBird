@@ -8,6 +8,19 @@ import Physics, { resetPipes } from "./Physics";
 import Constants from "./Constants";
 import Images from "./assets/Images";
 import findCoordinates from "./Geolocation";
+import Realm from "realm";
+
+let realm;
+
+const scoreRow = {
+  name: "score",
+  properties: {
+    score: "int",
+    address: "string",
+    date: "string"
+  },
+};
+
 
 export default class App extends Component {
   constructor(props) {
@@ -17,18 +30,60 @@ export default class App extends Component {
       running: true,
       score: 0,
       location: "",
+      scores: [],
+      played:0,
     };
 
     this.gameEngine = null;
 
+    realm = new Realm({
+      path: "UserDatabase5.realm",
+      schema: [{
+        name: "highScore",
+        properties: {
+          point: "int",
+          address: "string",
+          date: "string",
+        },
+      }],
+    });
+
     this.entities = this.setupWorld();
+
+    const updater = ({ location }) => {
+      this.setState({ location });
+    };
+    findCoordinates(updater);
   }
 
+  getFromDb = () => {
+    let highScores = realm.objects("highScore");
+    console.log("top:", highScores);
+
+    this.setState({played:highScores.length})
+
+    highScores = [...highScores].sort((a, b) => b.point - a.point).slice(0, 8);
+
+    // highScores.sort((a, b) => a.point - b.point);
+    console.log("top 10:", highScores);
+    this.setState({ scores: highScores });
+  };
+
+  insertToDb = (record) => {
+    console.log(record);
+    realm.write(() => {
+      realm.create("highScore", {
+        point: record.point * 1,
+        address: record.address,
+        date: record.date,
+      });
+    });
+  };
 
 
   setupWorld = () => {
     const updater = ({ location }) => {
-      this.setState({location})
+      this.setState({ location });
     };
 
     findCoordinates(updater);
@@ -75,6 +130,15 @@ export default class App extends Component {
   onEvent = (e) => {
     if (e.type === "game-over") {
       //Alert.alert("Game Over");
+
+      this.insertToDb({
+        point: this.state.score,
+        address: this.state.location,
+        date: new Date().toJSON(),
+      });
+
+      this.getFromDb();
+
       this.setState({
         running: false,
       });
@@ -109,13 +173,30 @@ export default class App extends Component {
           entities={this.entities}>
           <StatusBar hidden={true} />
         </GameEngine>
-        <Text style={styles.location}>{this.state.location}</Text>
+        {/*<Text style={styles.location}>{this.state.location}</Text>*/}
         <Text style={styles.score}>{this.state.score}</Text>
 
         {!this.state.running && <TouchableOpacity style={styles.fullScreenButton} onPress={this.reset}>
           <View style={styles.fullScreen}>
             <Text style={styles.gameOverText}>Game Over</Text>
             <Text style={styles.gameOverSubText}>Try Again</Text>
+            <Text style={styles.gameOverSubText}>Played: {this.state.played} times</Text>
+
+            <Text style={styles.gameOverText}>High Scores:</Text>
+            {this.state.scores.map((score, i) => (
+              <>
+              <Text style={{
+                color: "white",
+                marginTop:12
+              }}
+              >{i + 1}) {score.point}pkt. - {score.address}</Text>
+              <Text style={{
+                color: "white",
+              }}
+
+              >{score.date.replace('T', ' ').replace('Z', '').slice(0,19)}</Text>
+              </>
+            ))}
           </View>
         </TouchableOpacity>}
       </View>
