@@ -11,17 +11,6 @@ import findCoordinates from "./Geolocation";
 import Realm from "realm";
 import axios from "axios";
 
-let realm;
-
-const scoreRow = {
-  name: "score",
-  properties: {
-    score: "int",
-    address: "string",
-    date: "string",
-  },
-};
-
 
 export default class App extends Component {
   constructor(props) {
@@ -36,18 +25,6 @@ export default class App extends Component {
     };
 
     this.gameEngine = null;
-
-    realm = new Realm({
-      path: "scoreDb.realm",
-      schema: [{
-        name: "highScore",
-        properties: {
-          point: "int",
-          address: "string",
-          date: "string",
-        },
-      }],
-    });
 
     this.entities = this.setupWorld();
 
@@ -68,13 +45,17 @@ export default class App extends Component {
     //
     // console.log("top 10:", highScores);
     // this.setState({ scores: highScores });
-    await axios.get("http://localhost:4545/api/")
+    await axios.get("https://flappybirdam.herokuapp.com/api/")
       .then(res => {
-        console.log(res);
+        console.log("LOG: udane pobieranie ", res.data);
         this.setState({ played: res.data.length });
 
-        const highScores = [...res.data].sort((a, b) => b.point - a.point).slice(0, 8);
-        this.setState({ scores: highScores });
+        const highScores = res.data.sort((a, b) => b.point - a.point).slice(0, 8);
+        // this.setState({ scores: highScores });
+        console.log("HIGH: ", highScores);
+      })
+      .catch(e=>{
+        console.log("nieudane pobieranie");
       });
 
   };
@@ -89,13 +70,17 @@ export default class App extends Component {
     //     date: record.date,
     //   });
     // });
-    await axios.post("http://localhost:4545/api/", {
-      time: record.date,
+    console.log("LOG: dodawanie do bazy", record.time);
+    await axios.post("https://flappybirdam.herokuapp.com/api/", {
+      time: record.time,
       location: record.location,
       point: record.point,
     }).then(r => {
-      console.log(r);
-    });
+      console.log("LOG: dodano ",r.data);
+    })
+      .catch(e=>{
+        console.log("nieudane dodawanie");
+      });
   };
 
 
